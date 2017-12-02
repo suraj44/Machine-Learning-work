@@ -13,7 +13,7 @@ n_classes = 10 #we have digits 0 to 9
 batch_size = 100 #we'll be training the NN with 100 images at a time
 
 x = tf.placeholder('float', [None, 784])
-y = tf.placeholder('float', [10, None])
+y = tf.placeholder('float')
 
 #setting up the computational graph
 
@@ -48,7 +48,7 @@ def neural_network_model(data):
 
 def train_neural_network(x):
 	prediction = neural_network_model(x)
-	cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(prediction.y))
+	cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(prediction,y))
 
 	#now we want to minimise this cost
 
@@ -57,9 +57,9 @@ def train_neural_network(x):
 	num_epochs = 10
 
 	with tf.Session() as sess:
-		sess.run(tf.initialize_all_variables())
+		sess.run(tf.global_variables_initializer())
 
-		for epoch in num_epochs:
+		for epoch in range(num_epochs):
 			epoch_loss = 0
 			for _ in range(int(mnist.train.num_examples/batch_size)):
 				epoch_x,epoch_y = mnist.train.next_batch(batch_size) #run through the data for us
@@ -73,5 +73,5 @@ def train_neural_network(x):
 			
 		accuracy = tf.reduce_mean(tf.cast(correct, 'float'))
 
-		print 'Accuracy:', accuracy.eval({x:mnist.test.images, y:mnist.test.labels})
+		print 'Accuracy:', accuracy.eval({x:mnist.test.images, y:mnist.test.labels})*100
 train_neural_network(x)
