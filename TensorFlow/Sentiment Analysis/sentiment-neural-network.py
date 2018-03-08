@@ -73,12 +73,12 @@ def train_neural_network(x):
 				epoch_loss += c
 				i+= batch_size
 		
-			print 'Epoch', epoch+1 , 'completed out of', num_epochs, 'loss', epoch_loss
+			print('Epoch', epoch+1 , 'completed out of', num_epochs, 'loss', epoch_loss)
 		
 		#checking NN with the test data.Very high level
 		correct = tf.equal(tf.argmax(prediction,1), tf.argmax(y,1))
 			
 		accuracy = tf.reduce_mean(tf.cast(correct, 'float'))
 
-		print 'Accuracy:', accuracy.eval({x:test_x, y:test_y})*100
+		print('Accuracy:', accuracy.eval({x:test_x, y:test_y})*100)
 train_neural_network(x)

@@ -4,13 +4,13 @@ from tensorflow.examples.tutorials.mnist import input_data
 
 mnist = input_data.read_data_sets("/tmp/data/", one_hot = True)
 
-n_nodes_hl1 = 500 
-n_nodes_hl2 = 500
-n_nodes_hl3 = 500
+n_nodes_hl1 = 512 
+n_nodes_hl2 = 512
+n_nodes_hl3 = 512
 
 n_classes = 10 #we have digits 0 to 9
 
-batch_size = 100 #we'll be training the NN with 100 images at a time
+batch_size = 128 #we'll be training the NN with 100 images at a time
 
 x = tf.placeholder('float', [None, 784])
 y = tf.placeholder('float')
@@ -48,7 +48,7 @@ def neural_network_model(data):
 
 def train_neural_network(x):
 	prediction = neural_network_model(x)
-	cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(prediction,y))
+	cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits = prediction,labels = y))
 
 	#now we want to minimise this cost
 
@@ -66,12 +66,12 @@ def train_neural_network(x):
 				_, c = sess.run([optimizer, cost], feed_dict = {x: epoch_x, y:epoch_y}) #c represents cost
 				epoch_loss += c
 		
-			print 'Epoch', epoch , 'completed out of', num_epochs, 'loss', epoch_loss
+			print('Epoch', epoch , 'completed out of', num_epochs, 'loss', epoch_loss)
 		
 		#checking NN with the test data.Very high level
 		correct = tf.equal(tf.argmax(prediction,1), tf.argmax(y,1))
 			
 		accuracy = tf.reduce_mean(tf.cast(correct, 'float'))
 
-		print 'Accuracy:', accuracy.eval({x:mnist.test.images, y:mnist.test.labels})*100
+		print('Accuracy:', accuracy.eval({x:mnist.test.images, y:mnist.test.labels})*100)
 train_neural_network(x)

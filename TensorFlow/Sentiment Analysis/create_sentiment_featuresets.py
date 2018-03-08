@@ -30,7 +30,7 @@ def create_lexicon(pos, neg):
 			for w in word_counts:
 				if 1000>word_counts[w] > 50: #we're filtering the kind of words we want in our lexicon. Words like 'the', 'a' etc will have a very large number of occurences and we do not wish to include them
 					l2.append(w)
-			print len(l2)
+			print(len(l2))
 			return l2
 
 def sample_handling(sample, lexicon, classification):
