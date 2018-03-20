@@ -13,15 +13,25 @@ Building the data structure would take O(N) time complexity
 but access time for a given feature would be O(N) this way
 
 
-yet to complete:
-1. Using the jsons module to dump the structure into a SQL database
-2. Running the KMeans algorithm on the data
 
 Note: Due to technical issues, I was without a working machine for a weak and hence 
 did not have a resource to work on the task.
 
+
+Based on the research paper conerning the SuperDARN group of radars, I identified 
+some features that would be suitable to feed to the KMeans clustering algorithm.
+
+
+I have normalized the data by dividing all values of a given feature fo a particular 
+DateTime instance by the maximum value of the feature corresponding to that DateTime
+instance. 
+
 ==================================================================================
 
+
+Yet to complete:
+1. Using the jsons module to dump the structure into a SQL database
+2. Running the KMeans algorithm on the data
 '''
 
 from sklearn.cluster import KMeans
@@ -29,6 +39,7 @@ from davitpy import pydarn
 import davitpy.pydarn.sdio
 import datetime as dt
 from matplotlib.dates import *
+import json
 
 sTime = dt.datetime(2011,1,1,1,0)
 print sTime
@@ -150,11 +161,16 @@ y = []
 for i in dataset:
 	X.append(i[:2])
 	y.append(i[2])
-print X[:2]
+#print X[:2]
 
 import random
 
-print myDict[734138.0419535764]
+#print myDict[734138.0419535764]
+
+
+import json
+with open('radData.json', 'w') as fp:
+	json.dump(myDict, fp)
 
 # km = KMeans(n_clusters = 3)
 
