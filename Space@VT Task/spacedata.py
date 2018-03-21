@@ -99,7 +99,7 @@ while(myBeam!= None):
 	spec.append(myBeam.fit.w_l)
 
 	myBeam = pydarn.sdio.radDataReadRec(myPtr)
-
+print len(t)
 #print vel[0]
 
 
