@@ -37,3 +37,15 @@ Some of the values in the original list were ```NaN``,  they were converted to 0
 Some of the values of the spectral width list are ```inf```, so they need to be represented in some other form. Some sort of function that maps them to smaller values yet retaining the range must be applied. 
 
 NOTE: As of now only 3 of the 6 features listed in the report are being considered. 
+
+
+### Analysing the Clusters
+(currently working on a smaller section of the data, as loading a week's worth of data from DaVitPy takes extremely long)
+I did not specify the number of clusters to be created. Scikit-learn grouped the data into 8 clusters and based on maybe the elevation angle, multiple clusters can be grouped into categories to classify backscatter as ground scatter or ionospheric scatter.
+For example consider the following clusters:
+
+![Cluster 2](https://i.imgur.com/j1V1HO1.png)
+
+![Cluster 5](https://i.imgur.com/fF4dWti.png)
+
+Clearly the elevation angle can be used to categorize each cluster as either ground scatter or ionosphere scatter. In the future, after reading more about the features available from the Blackstone radar, there could be more parameters included to categorize the clusters.
