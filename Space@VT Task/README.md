@@ -1,6 +1,6 @@
 # Space@VT GSoC Task - 4 
 
-This is my *(yet to be completed)* submission of task 4.
+This is my submission of task 4.
 
 
 # Files
@@ -17,7 +17,7 @@ Initially, my plan was to explicitly define the fields in each table of the data
   
 After going through the readRadar.ipynb in the DaVitPy tutorial, I got an idea from the first scatter plot shown. The idea was that I would traverse all DateTime elements in myBeam, convert them to numbers using the date2num function in matplotlib and initialize them as keys to a dictionary. The value corresponding to each key would be of the following type:  
   
-myDict\[date2num(DateTimeObject)\] = {feature1: \[\], feature2: \[\], ….., featureN: \[\]}
+```myDict\[date2num(DateTimeObject)\] = {feature1: \[\], feature2: \[\], ….., featureN: \[\]}```
 
   
 Then the idea was to repeatedly traverse through the database again and append values of the features to the corresponding DateTimeObject’s feature list.  
@@ -39,7 +39,7 @@ Some of the values of the spectral width list are ```inf```, so they need to be 
 NOTE: As of now only 3 of the 6 features listed in the report are being considered. 
 
 
-### Analysing the Clusters
+## Analysing the Clusters
 (currently working on a smaller section of the data, as loading a week's worth of data from DaVitPy takes extremely long)
 I did not specify the number of clusters to be created. Scikit-learn grouped the data into 8 clusters and based on maybe the elevation angle, multiple clusters can be grouped into categories to classify backscatter as ground scatter or ionospheric scatter.
 For example consider the following clusters:

@@ -1,40 +1,3 @@
-'''
-==================================================================================
-Task 4
-Brief explanation: 
-
-The data structure I'm using to create the SQL database is a ditionary myDict wherein
-each key in the dictionary is a date2num converted number repreneting a particular 
-DateTime instance and the corresponding value to that key is a dictionary with each key as 
-a feature and the corresponding value a list containing the values of the particular feature
-corresponding to that DateTime instance.
-
-Building the data structure would take O(N) time complexity
-but access time for a given feature would be O(N) this way
-
-
-
-Note: Due to technical issues, I was without a working machine for a weak and hence 
-did not have a resource to work on the task.
-
-
-Based on the research paper conerning the SuperDARN group of radars, I identified 
-some features that would be suitable to feed to the KMeans clustering algorithm.
-
-
-I have normalized the data by dividing all values of a given feature fo a particular 
-DateTime instance by the maximum value of the feature corresponding to that DateTime
-instance. 
-
-
-==================================================================================
-
-
-Yet to complete:
-1. Using the jsons module to dump the structure into a SQL database
-2. Running the KMeans algorithm on the data
-'''
-
 from sklearn.cluster import KMeans
 from davitpy import pydarn
 import davitpy.pydarn.sdio
@@ -42,7 +5,6 @@ import datetime as dt
 from matplotlib.dates import *
 import json
 import numpy as np
-import pickle
 
 '''
 ==================================================================================
@@ -58,7 +20,7 @@ rad='bks'
 
 #NOTE:the rest of the inputs are optional
 #eTime is the end time we want to read until
-eTime = dt.datetime(2011,1,1,2,0)
+eTime = dt.datetime(2011,1,2,2,0)
 print eTime
 
 #channel is the radar channel we want data from
@@ -95,25 +57,94 @@ myPtr = pydarn.sdio.radDataOpen(sTime,rad,eTime=eTime,channel=channel,bmnum=bmnu
 
 myBeam = pydarn.sdio.radDataReadRec(myPtr)
 
-
 #print myBeam
 
-vel,t ,pwr, spec, gflg, slist =[], [], [], [], [], []
+
+vel,t ,pwr, spec, elv =[], [], [], [], []
 final = []
 
 while(myBeam!= None):
-	vel.append(myBeam.fit.v)
-	t.append(myBeam.time)
-	pwr.append(myBeam.fit.pwr0)
-	spec.append(myBeam.fit.w_l)
-	gflg.append(myBeam.fit.gflg)
-	slist.append(myBeam.fit.slist)
+    vel.append(myBeam.fit.v)
+    t.append(myBeam.time)
+    pwr.append(myBeam.fit.pwr0)
+    spec.append(myBeam.fit.w_l)
+    elv.append(myBeam.fit.elv)
 
-	myBeam = pydarn.sdio.radDataReadRec(myPtr)
+    myBeam = pydarn.sdio.radDataReadRec(myPtr)
+print len(t)
 
-for i in slist[:10]:
-	print i
+v_final = []
+pwr_final = []
+spec_final = []
+#ax = gca()
+myDict = {}
+maxi = -(float("inf"))
 
-print '\n'
-for i in gflg[:10]:
-	print i
+
+for i in range(len(t)):
+	myDict[t[i]] = {'vel': [], 'pwr': [], 'spec' :[], 'elv':[]}
+
+
+for i in range(len(t)):
+    if not vel[i]: 
+        continue
+  
+    for j in vel[i]:
+    	if j > maxi:
+    		maxi = j
+    	myDict[t[i]]['vel'].append(j)
+    	v_final.append([t[i], j, 'vel'])
+for j in v_final:
+	j[1] /= float(maxi)
+
+
+temp_list = []
+for i in v_final:
+	if i[0] not in temp_list:
+		temp_list.append(i[01])
+
+maxi = -(float("inf"))
+
+for i in range(len(t)):
+    if not pwr[i]: continue
+    for j in pwr[i]:
+    	if j > maxi:
+    		maxi = j
+    	myDict[t[i]]['pwr'].append(j)
+    	pwr_final.append([t[i], j, 'pwr'])
+for j in pwr_final:
+    j[1] /=maxi
+maxi = -(float("inf"))
+
+for i in range(len(t)):
+    if not spec[i]: continue
+    for j in spec[i]:
+    	if j > maxi:
+    		maxi = j
+    	myDict[t[i]]['spec'].append(j)
+    	spec_final.append([t[i], j, 'spec'])
+        
+for i in range(len(t)):
+    if not spec[i]: continue
+    for j in elv[i]:
+    	if j > maxi:
+    		maxi = j
+    	myDict[t[i]]['elv'].append(j)
+for j in spec_final:
+	j[1] /=maxi
+
+#dataset = v_final + pwr_final + spec_final
+
+# X = []
+# y = []
+# for i in dataset:
+# 	X.append(i[:2])
+# 	y.append(i[2])
+#print X[:2]
+
+import random
+
+
+import pandas as pd
+df = pd.DataFrame(myDict).T.reset_index()
+df.to_pickle('data')
